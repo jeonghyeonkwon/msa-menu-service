@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Eureka } from 'eureka-js-client';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ip = require('ip');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,9 +13,9 @@ async function bootstrap() {
       instanceId: `${ip.address()}:${process.env.PORT!}`,
       hostName: `${ip.address()}`,
       ipAddr: `${ip.address()}`,
-      statusPageUrl: 'http://localhost:3065/check',
+      statusPageUrl: `http://localhost:${process.env.PORT!}/check`,
       port: {
-        $: 3067,
+        $: parseInt(process.env.PORT!),
         '@enabled': true,
       },
       vipAddress: 'menu-service.jeonghyeon.com',
@@ -33,38 +34,6 @@ async function bootstrap() {
     console.log(error || 'menu service registered');
   });
   app.listen(process.env.PORT);
-  // await app.listen(process.env.PORT!);
-  // const kafka = await NestFactory.createMicroservice<MicroserviceOptions>(
-  //   AppModule,
-  //   {
-  //     transport: Transport.KAFKA,
-  //     options: {
-  //       client: {
-  //         clientId: `menu-${process.env.PORT}`,
-  //         brokers: ['localhost:9092'],
-  //       },
-  //       consumer: {
-  //         groupId: 'menu-group',
-  //       },
-  //     },
-  //   },
-  // );
-  // kafka.listen();
-  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-  //   AppModule,
-  //   {
-  //     transport: Transport.KAFKA,
-  //     options: {
-  //       client: {
-  //         brokers: ['localhost:9092'],
-  //       },
-  //     },
-  //   },
-  // );
-  // app
-  //   .listen()
-  //   .then(() => console.log('microservice start'))
-  //   .catch((err) => console.error(err));
 }
 
 bootstrap();

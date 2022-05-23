@@ -1,7 +1,8 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { createQueryBuilder, EntityRepository, Repository } from 'typeorm';
 import { Restaurant } from './restaurant.entity';
 import { IRestaurant } from './dto/restaurant.kafka';
 import { Foods } from '../foods/foods.entity';
+import { RestaurantSearchOption } from './dto/restaurant.search';
 
 @EntityRepository(Restaurant)
 export class RestaurantRepository extends Repository<Restaurant> {
@@ -25,11 +26,19 @@ export class RestaurantRepository extends Repository<Restaurant> {
     return restaurant;
   }
 
-  async addEntityFoods(requestRestaurantId: string, food: Foods) {
-    const restaurant = await this.findOne({
-      where: { restaurantId: requestRestaurantId },
-    });
-    restaurant.foods.push(food);
-    await this.save(restaurant);
+  findListOption(option: RestaurantSearchOption) {
+    const queryBuilder = createQueryBuilder()
+      .select(['restaurant.restaurantId', 'restaurant.restaurantName'])
+      .from(Restaurant, 'restaurant')
+      .limit(option.getLimit())
+      .offset(option.getOffset());
+    if (option.hasRestaurantName()) {
+      queryBuilder.andWhere(
+        'restaurant.restaurantName ilike : restaurantName',
+        { restaurantName: `%${option.restaurantName}%` },
+      );
+    }
+
+    return queryBuilder.disableEscaping().getManyAndCount();
   }
 }
