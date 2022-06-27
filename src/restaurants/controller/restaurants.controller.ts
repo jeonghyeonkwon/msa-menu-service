@@ -11,7 +11,7 @@ import {
 import { RestaurantSearchOption } from '../dto/restaurant.search';
 import { FoodSearchOption } from '../../foods/dto/food.search';
 
-@Controller('/menu-service/restaurants')
+@Controller('/restaurants')
 export class RestaurantsController {
   constructor(private readonly restaurantService: RestaurantsService) {}
 

@@ -18,7 +18,7 @@ async function bootstrap() {
         $: parseInt(process.env.PORT!),
         '@enabled': true,
       },
-      vipAddress: 'menu-service.jeonghyeon.com',
+      vipAddress: 'menu-service',
       dataCenterInfo: {
         '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
         name: 'MyOwn',

@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import {
   Consumer,
   ConsumerRunConfig,
-  ConsumerSubscribeTopic, ConsumerSubscribeTopics,
-  Kafka
-} from "kafkajs";
+  ConsumerSubscribeTopic,
+  ConsumerSubscribeTopics,
+  Kafka,
+} from 'kafkajs';
 
 @Injectable()
 export class ConsumerService {
